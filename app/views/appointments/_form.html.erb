@@ -1,0 +1,35 @@
+<%= form_with(model: appointment) do |f| %>
+
+  <%= render "shared/error_messages", object: appointment %>
+
+  <div class="mb-3">
+    <%= f.label :date %>
+    <%= f.datetime_field :date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :reason %>
+    <%= f.text_area :reason, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :status %>
+    <%= f.select :status,
+          Appointment.statuses.keys.map { |s| [s.humanize, s] },
+          {},
+          class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :pet %>
+    <%= f.collection_select :pet_id, Pet.all, :id, :name, {}, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :vet %>
+    <%= f.collection_select :vet_id, Vet.all, :id, :first_name, {}, class: "form-select" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+
+<% end %>

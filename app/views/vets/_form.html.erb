@@ -1,0 +1,32 @@
+<%= form_with(model: vet) do |f| %>
+
+  <%= render "shared/error_messages", object: vet %>
+
+  <div class="mb-3">
+    <%= f.label :first_name %>
+    <%= f.text_field :first_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :last_name %>
+    <%= f.text_field :last_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email %>
+    <%= f.text_field :email, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :phone %>
+    <%= f.text_field :phone, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :specialization %>
+    <%= f.text_field :specialization, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+
+<% end %>

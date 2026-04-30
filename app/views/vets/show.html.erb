@@ -1,17 +1,17 @@
-<h1><%= @vet.first_name %> <%= @vet.last_name %></h1>
+<h1 class="mb-4">Vet Details</h1>
 
-<p><strong>Email:</strong> <%= @vet.email %></p>
-<p><strong>Phone:</strong> <%= @vet.phone %></p>
-<p><strong>Specialization:</strong> <%= @vet.specialization %></p>
+<div class="card">
+  <div class="card-body">
 
-<h2 class="mt-4">Appointments</h2>
+    <p><strong>Name:</strong> <%= @vet.first_name %> <%= @vet.last_name %></p>
+    <p><strong>Email:</strong> <%= @vet.email %></p>
+    <p><strong>Phone:</strong> <%= @vet.phone %></p>
+    <p><strong>Specialization:</strong> <%= @vet.specialization %></p>
 
-<ul>
-  <% @vet.appointments.each do |a| %>
-    <li>
-      <%= link_to a.reason, a %> |
-      <%= a.date.strftime("%B %d, %Y") %> |
-      Pet: <%= link_to a.pet.name, a.pet %>
-    </li>
-  <% end %>
-</ul>
+    <hr>
+
+    <%= link_to "Edit", edit_vet_path(@vet), class: "btn btn-warning" %>
+    <%= link_to "Back", vets_path, class: "btn btn-secondary" %>
+
+  </div>
+</div>
