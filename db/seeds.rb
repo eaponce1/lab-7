@@ -1,4 +1,5 @@
-puts "Creating data"
+
+puts "Creating data..."
 
 # CLEAN DB
 Treatment.destroy_all
@@ -7,7 +8,9 @@ Pet.destroy_all
 Vet.destroy_all
 Owner.destroy_all
 
+# ======================
 # OWNERS
+# ======================
 owner1 = Owner.create!(
   first_name: "Juan",
   last_name: "Perez",
@@ -32,12 +35,14 @@ owner3 = Owner.create!(
   address: "Las Condes"
 )
 
+# ======================
 # PETS
+# ======================
 pet1 = owner1.pets.create!(
   name: "Firulais",
   species: "dog",
   breed: "Labrador",
-  date_of_birth: Date.new(2020,1,1),
+  date_of_birth: Date.new(2020, 1, 1),
   weight: 20
 )
 
@@ -45,7 +50,7 @@ pet2 = owner1.pets.create!(
   name: "Michi",
   species: "cat",
   breed: "Siamese",
-  date_of_birth: Date.new(2021,3,10),
+  date_of_birth: Date.new(2021, 3, 10),
   weight: 5
 )
 
@@ -53,27 +58,48 @@ pet3 = owner2.pets.create!(
   name: "Conejo",
   species: "rabbit",
   breed: "Mini Lop",
-  date_of_birth: Date.new(2022,6,15),
+  date_of_birth: Date.new(2022, 6, 15),
   weight: 2
 )
 
-pet4 = owner3.pets.create!(
-  name: "Rocky",
-  species: "dog",
-  breed: "Bulldog",
-  date_of_birth: Date.new(2019,8,20),
-  weight: 25
-)
+# ======================
+# ATTACH PHOTOS
+# ======================
+pets = [pet1, pet2, pet3]
+files = ["dog.jpg", "cat.jpg", "rabbit.jpg"]
 
-pet5 = owner2.pets.create!(
-  name: "Luna",
-  species: "cat",
-  breed: "Persian",
-  date_of_birth: Date.new(2020,11,11),
-  weight: 4
-)
+pets.each_with_index do |pet, index|
+  path = Rails.root.join("db/seeds/pets/#{files[index]}")
 
+  if File.exist?(path)
+
+    content_type =
+      case File.extname(files[index]).downcase
+      when ".jpg", ".jpeg"
+        "image/jpeg"
+      when ".png"
+        "image/png"
+      when ".webp"
+        "image/webp"
+      end
+
+    pet.photo.attach(
+      io: File.open(path),
+      filename: files[index],
+      content_type: content_type
+    )
+
+    pet.save!
+
+    puts "Photo attached to #{pet.name}"
+  else
+    puts "⚠️ File not found: #{path}"
+  end
+end
+
+# ======================
 # VETS
+# ======================
 vet1 = Vet.create!(
   first_name: "Ana",
   last_name: "Diaz",
@@ -88,90 +114,77 @@ vet2 = Vet.create!(
   specialization: "Surgery"
 )
 
+# ======================
 # APPOINTMENTS
-
-# FUTURE
+# ======================
 app1 = Appointment.create!(
   pet: pet1,
   vet: vet1,
   date: Time.current + 1.day,
-  reason: "Checkup",
+  reason: "General Checkup",
   status: :scheduled
 )
 
 app2 = Appointment.create!(
   pet: pet2,
   vet: vet2,
-  date: Time.current + 2.days,
-  reason: "Vaccine",
-  status: :in_progress
-)
-
-# PAST
-app3 = Appointment.create!(
-  pet: pet3,
-  vet: vet1,
   date: Time.current - 2.days,
-  reason: "Control",
+  reason: "Dental Control",
   status: :completed
 )
 
-app4 = Appointment.create!(
-  pet: pet4,
-  vet: vet2,
-  date: Time.current - 1.day,
-  reason: "Surgery",
-  status: :cancelled
-)
-
-# FUTURE
-app5 = Appointment.create!(
-  pet: pet5,
+app3 = Appointment.create!(
+  pet: pet3,
   vet: vet1,
-  date: Time.current + 3.days,
-  reason: "Review",
-  status: :scheduled
+  date: Time.current + 2.days,
+  reason: "Vaccination",
+  status: :in_progress
 )
 
-# TREATMENTS
-app1.treatments.create!(
-  name: "Treatment A",
-  medication: "Med1",
-  dosage: "10mg",
-  notes: "OK",
+# ======================
+# TREATMENTS + ACTION TEXT
+# ======================
+
+t1 = app1.treatments.create!(
+  name: "Vaccination",
   administered_at: Time.current
 )
 
-app2.treatments.create!(
-  name: "Treatment B",
-  medication: "Med2",
-  dosage: "5mg",
-  notes: "OK",
+t1.clinical_notes = <<~HTML
+  <h3>General Check</h3>
+  <ul>
+    <li>Healthy</li>
+    <li>No issues detected</li>
+  </ul>
+HTML
+
+t1.save!
+
+t2 = app2.treatments.create!(
+  name: "Dental Cleaning",
   administered_at: Time.current
 )
 
-app3.treatments.create!(
-  name: "Treatment C",
-  medication: "Med3",
-  dosage: "2mg",
-  notes: "OK",
+t2.clinical_notes = <<~HTML
+  <strong>Teeth cleaned successfully</strong><br>
+  Follow-up in 6 months.
+HTML
+
+t2.save!
+
+t3 = app3.treatments.create!(
+  name: "Antibiotic Treatment",
   administered_at: Time.current
 )
 
-app4.treatments.create!(
-  name: "Treatment D",
-  medication: "Med4",
-  dosage: "1mg",
-  notes: "OK",
-  administered_at: Time.current
-)
+t3.clinical_notes = <<~HTML
+  <h4>Medication</h4>
+  <ul>
+    <li>Amoxicillin</li>
+    <li>Dosage: 5mg daily</li>
+  </ul>
+HTML
 
-app5.treatments.create!(
-  name: "Treatment E",
-  medication: "Med5",
-  dosage: "3mg",
-  notes: "OK",
-  administered_at: Time.current
-)
+t3.save!
 
 puts "Data created successfully!"

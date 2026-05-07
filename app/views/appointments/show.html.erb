@@ -32,31 +32,31 @@
 
     <hr>
 
-    <!-- TREATMENTS SECTION -->
-    <h4 class="mt-4">Treatments</h4>
+    <!-- TREATMENTS -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <h4 class="mb-0">Treatments</h4>
 
-    <%= link_to "New Treatment",
-          new_appointment_treatment_path(@appointment),
-          class: "btn btn-primary mb-3" %>
+      <%= link_to "New Treatment",
+            new_appointment_treatment_path(@appointment),
+            class: "btn btn-primary" %>
+    </div>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+    <% if @appointment.treatments.any? %>
 
-      <tbody>
-        <% @appointment.treatments.each do |t| %>
-          <tr>
-            <td><%= t.name %></td>
-            <td><%= t.administered_at&.strftime("%B %d, %Y %H:%M") %></td>
+      <% @appointment.treatments.each do |t| %>
+        <div class="card mt-3">
+          <div class="card-body">
 
-            <td>
+            <div class="d-flex justify-content-between align-items-start">
+
+              <div>
+                <h5 class="mb-1"><%= t.name %></h5>
+                <small class="text-muted">
+                  <%= t.administered_at&.strftime("%B %d, %Y %H:%M") %>
+                </small>
+              </div>
+
               <div class="d-flex gap-2">
-
                 <%= link_to "Edit",
                       edit_appointment_treatment_path(@appointment, t),
                       class: "btn btn-sm btn-outline-warning" %>
@@ -68,13 +68,28 @@
                       class: "btn btn-sm btn-outline-danger" do %>
                   Delete
                 <% end %>
-
               </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+
+            </div>
+
+            <hr>
+
+            <!-- CLINICAL NOTES -->
+            <div class="mt-2">
+              <%= t.clinical_notes %>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+
+    <% else %>
+
+      <div class="alert alert-info mt-3">
+        No treatments yet.
+      </div>
+
+    <% end %>
 
   </div>
 </div>

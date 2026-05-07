@@ -58,7 +58,8 @@ class PetsController < ApplicationController
       :breed,
       :date_of_birth,
       :weight,
-      :owner_id
+      :owner_id,
+      :photo
     )
   end
 end

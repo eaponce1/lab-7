@@ -13,6 +13,11 @@ class Owner < ApplicationRecord
             uniqueness: true,
             format: { with: URI::MailTo::EMAIL_REGEXP }
 
+  # FULL NAME
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def normalize_email

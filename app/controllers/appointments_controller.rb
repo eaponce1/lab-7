@@ -14,6 +14,10 @@ class AppointmentsController < ApplicationController
 
   # SHOW
   def show
+    # 👇 ESTO ES CLAVE (N+1 FIX)
+    @appointment = Appointment
+      .includes(:pet, :vet, treatments: [:rich_text_clinical_notes])
+      .find(params[:id])
   end
 
   # NEW
@@ -54,6 +58,7 @@ class AppointmentsController < ApplicationController
   private
 
   def set_appointment
+    
     @appointment = Appointment.includes(:pet, :vet).find(params[:id])
   end
 
